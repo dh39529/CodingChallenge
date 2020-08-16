@@ -8,7 +8,7 @@ public class MartianChallenge {
 
 	private static final String GRID_RANGE = "[0-9]\\d{0,1}\\s+[0-9]\\d{0,1}";
 	private static final String ROBOT_LOCATION = GRID_RANGE + "\\s+[N,S,E,W]";
-	private static final String MOVE_INSTRUCTIONS = "[F,L,R]{1,50}";
+	private static final String MOVE_INSTRUCTIONS = "[F,L,R]{1,100}";
 
 	
 	private static MarsGrid createMarsGrid(String gridSize) {
@@ -54,7 +54,7 @@ public class MartianChallenge {
 	
 	public static void main(String[] args) {
 		int lineIndex = 0;
-		Robot robot = null;
+		Moveable robot = null;
 		MarsGrid marsGrid = null;
 		try {
 			for (String line : Files.readAllLines(Paths.get("./robotInstructions.txt"))) {

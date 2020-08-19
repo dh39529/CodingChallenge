@@ -1,21 +1,20 @@
 package com.challenge.robots;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class MarsGrid {
 
 	private int maxX;
 	private int maxY;
-	private Map<String, List<Robot>> robotMap;
-	private boolean[][] lostRobots;
+	private List<Robot> robots;
+	private boolean[][] robotScents;
 
 	private static MarsGrid marsGrid;
 
 	private MarsGrid() {
-		robotMap = new HashMap<String, List<Robot>>();
+		robots = new ArrayList<>();
 	}
 	
 	public static MarsGrid getInstance() {
@@ -28,7 +27,7 @@ public class MarsGrid {
 	public void setupGrid(int xMax, int yMax) {
 		maxX = xMax;
 		maxY = yMax;
-	    lostRobots = new boolean[maxX+1][maxY+1];
+		robotScents = new boolean[maxX+1][maxY+1];
 	}
 	
 	public int getMaxX() {
@@ -39,26 +38,50 @@ public class MarsGrid {
 		return maxY;
 	}
 	
-	public Map<String, List<Robot>> getRobotMap() {
-		return robotMap;
+	public List<Robot> getRobots() {
+		return robots;
 	}
 	
-	public boolean[][] getLostRobots() {
-		return lostRobots;
+	public boolean isScent(int xPos, int yPos) {
+		return robotScents[xPos][yPos];
+	}
+	public void setScent(int xPos, int yPos) {
+		robotScents[xPos][yPos] = true;
 	}
 	
 	public void writeOutput() {
-		for (List<Robot> robotList : robotMap.values()) {
-			robotList.forEach(System.out::println);
-		}
+			robots.forEach(System.out::println);
 	}
 
 	public void addRobot(Robot robot) {
-		List<Robot> robotList = robotMap.get(robot.getXpos() + "," + robot.getYpos());
-		if (robotList == null) {
-			robotList = new ArrayList<>();
-		} 
-		robotList.add(robot);
-		robotMap.put(robot.getXpos() + "," + robot.getYpos(), robotList);		
+		robots.add(robot);	
+	}
+	
+	public void run() {
+		robots.forEach(robot->issueInstructions(robot));
+		robots.forEach(System.out::println);
+	}
+	
+	private void issueInstructions(Robot robot) {
+		Arrays.stream(robot.getInstructions().split("")).forEach(s -> {
+																		if (!robot.isLost()) {
+																			getCommand(s).execute(robot);
+																		}
+																	  }
+																);
+	}
+	
+	private Command getCommand(String instruction) {
+		switch (instruction) {
+			case "R" :
+				return new TurnRight();			
+			case "L" :
+				return new TurnLeft();
+			case "F" :
+				return new Forward();
+			default :
+				return null;
+		}
+	
 	}
 }

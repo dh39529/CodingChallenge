@@ -1,13 +1,13 @@
 package com.challenge.robots;
 
-public class Robot implements Moveable{
+public class Robot {
 
 	private int xpos;
 	private int ypos;
+	private String instructions;
 	private String directions[] = new String[] {"N", "E", "S", "W"};
 	private int directionIndex;
 	private boolean isLost;
-	private boolean isMoved;
 	
 	
 	public Robot(int x, int y, String direction) {
@@ -21,76 +21,43 @@ public class Robot implements Moveable{
 			}
 			index++;
 		}
+		
+	}
+	
+	public void setInstructions(String instructionSet) {
+		instructions = instructionSet;
+	}
+	
+	public String getInstructions() {
+		return instructions;
+	}
+	
+	public void setXPos(int x) {
+		xpos = x;
 	}
 	
 	public int getXpos() {
 		return xpos;
 	}
 	
+	public void setYPos(int y) {
+		ypos = y;
+	}
+
 	public int getYpos() {
 		return ypos;
 	}
 	
-	@Override
-	public void move(String[] instructions) {
-
-		for (String instruct : instructions) {
-			if (isLost) {
-				break;
-			}
-			Instruction instruction = Instruction.getInstruction(instruct);
-			if (instruction != null) {
-				instruction.moveRobot(this);
-			}
-		}
+	public void setDirectionIndex(int direction) {
+		directionIndex = direction;
 	}
 	
-	public void moveRight() {
-		directionIndex = directionIndex < 3 ? directionIndex+1 : 0;
+	public int getDirectionIndex() {
+		return directionIndex;
 	}
 	
-	public void moveLeft() {
-		directionIndex = directionIndex > 0 ? directionIndex-1 : 3;
-	}
-	
-	public void moveLocation(int steps) {
-		isMoved = false;
-		switch (directionIndex) {
-			case 0: 
-				if (ypos < MarsGrid.getInstance().getMaxY()) {
-					ypos+=steps;
-					isMoved = true;
-				} 
-				break;
-			case 1:
-				if (xpos< MarsGrid.getInstance().getMaxX()) {
-					xpos+=steps;
-					isMoved = true;
-				} 
-				break;
-			case 2:
-				if (ypos > 0 ) {
-					ypos-=steps;
-					isMoved = true;
-				}
-				break;
-			case 3:
-				if (xpos > 0) {
-					xpos-=steps;
-					isMoved = true;
-				}
-				break;
-		}
-		if (!isMoved) {
-			checkLost();
-		}
-	}
-
-	private void checkLost() {
-		if (!MarsGrid.getInstance().getLostRobots()[xpos][ypos]) {
-			isLost = true;
-			MarsGrid.getInstance().getLostRobots()[xpos][ypos] = true;
-		}
+	public void setLost() {
+		isLost = true;
 	}
 		
 	public boolean isLost() {
